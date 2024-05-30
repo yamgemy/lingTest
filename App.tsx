@@ -69,7 +69,7 @@ function App(): JSX.Element {
 const styles = (theme: MD3Theme) => StyleSheet.create({
   fullDeviceBase: {
     flex:1,
-    backgroundColor:  theme.dark? colors.grey_900: 'red'
+    backgroundColor:  theme.colors.background
   },
   safeAreaRoot:{
     flex:1,

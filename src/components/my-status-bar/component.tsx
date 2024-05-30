@@ -6,7 +6,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export const MyStatusBar = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  console.log('MyStatusBar', theme.colors.background);
 
   return (
     <View style={[{height:insets.top, backgroundColor: theme.colors.background}]}>
