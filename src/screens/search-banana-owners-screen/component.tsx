@@ -23,6 +23,10 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
 
   const [searchQuery, setSearchQuery] = React.useState('');
 
+  const onSearchPress = useCallback(() => {
+
+  },[]);
+
   return ( 
     <View style={styles.root}>
       <ScalingTouchable onPress={toggleTheme}>
@@ -39,15 +43,18 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
            />
         </View>
         <View style={styles.searchButtonContainer}>
-          <Button 
-              labelStyle={styles.searchButtonLabel}
-              contentStyle={styles.searchButtonContent}
-              style={styles.searchButton}
-              mode={'contained'}
-              onPress={()=>{}}
+          <ScalingTouchable >
+            <Button 
+                disabled={!searchQuery}
+                labelStyle={styles.searchButtonLabel}
+                contentStyle={styles.searchButtonContent}
+                style={styles.searchButton}
+                mode={'contained'}
+                onPress={onSearchPress}
           >
-            Search
-          </Button>
+              Search
+            </Button>
+          </ScalingTouchable>
         </View>
 
       </View>
