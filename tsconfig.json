@@ -1,3 +1,147 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "NodeNext",
+    "esModuleInterop": true, /* implies allowSyntheticDefaultImports */
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "NodeNext",
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "strict": true,
+    "skipLibCheck": true,
+    "jsx": "react-native",
+    "baseUrl": "./",
+    "allowJs": true,
+    "noImplicitAny": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@src/*": [
+        "src/*"
+      ],
+      "@constants": [
+        "src/constants/index.ts"
+      ],
+      "@constants/*": [
+        "src/constants/*"
+      ],
+      "@screens": [
+        "src/screens/index.ts"
+      ],
+      "@screens/*": [
+        "src/screens/*"
+      ],
+      "@navigators": [
+        "src/navigators/index.ts"
+      ],
+      "@navigators/*": [
+        "src/navigators/*"
+      ],
+      "@animations": [
+        "src/animations/index.ts"
+      ],
+      "@animations/*": [
+        "src/animations/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@components": [
+        "src/components/index.ts"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@utils": [
+        "src/utils/index.ts"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@hooks": [
+        "src/hooks/index.ts"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@store": [
+        "src/store/index.ts"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@selectors": [
+        "src/selectors/index.ts"
+      ],
+      "@selectors/*": [
+        "src/selectors/*"
+      ],
+      "@services": [
+        "src/services/index.ts"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@actions": [
+        "src/actions/index.ts"
+      ],
+      "@actions/*": [
+        "src/actions/*"
+      ],
+      "@api": [
+        "src/api/index.ts"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@reducers": [
+        "src/reducers/index.ts"
+      ],
+      "@reducers/*": [
+        "src/reducers/*"
+      ],
+      "@sagas": [
+        "src/sagas/index.ts"
+      ],
+      "@sagas/*": [
+        "src/sagas/*"
+      ],
+      "@dto/*": [
+        "src/dto/*"
+      ],
+      "@dto": [
+        "src/dto/index.ts"
+      ],
+      "@contexts": [
+        "src/contexts/index.ts"
+      ],
+      "@contexts/*": [
+        "src/contexts/*"
+      ]
+    },
+  },
+  "include": [
+    "src/**/*",
+    "tsconfig.json",
+    "App.tsx",
+  ],
+  "types": [
+    "react",
+    "react-native",
+    "jest"
+  ],
+  "exclude": [
+    "dest",
+    "android",
+    "ios",
+    "build",
+    "node_modules",
+    "jest.config.js",
+  ],
 }

@@ -5,114 +5,73 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+  View
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import { MyThemeProvider } from '@src/components';
+import { colors } from '@src/constants';
+import { SearchBananaOwnersScreen } from '@src/screens/search-banana-owners-screen';
+import { ActivityIndicator } from 'react-native-paper';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { configureStore } from './src/store/configure-store';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+function App(): JSX.Element {
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [configuredStore, setConfiguredStore] = useState<ReturnType<typeof configureStore>>();
+
+  useEffect(()=>{
+    if (!configuredStore) {
+      const configedStoreResult = configureStore();
+      setConfiguredStore(configedStoreResult); //put in useEffect so it only run ONCE
+    }
+  }, [configuredStore]);
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={styles.fullDeviceBase}>
+      <SafeAreaView style={styles.safeAreaRoot}>
+        {configuredStore? (
+          <Provider store={configuredStore.store}>
+            <PersistGate
+                loading={null}
+                persistor={configuredStore.persistor}
+            >
+              <MyThemeProvider>
+                <>
+                  <SearchBananaOwnersScreen/>
+                </>
+              </MyThemeProvider>
+            </PersistGate>
+          </Provider>
+        ): (
+          <View style={styles.activityIndicatorContainer}>
+            <ActivityIndicator size={'large'} 
+                animating={true} 
+                //this is not themed..and theme requires reading redux store.. 
+                color={colors.red_700}/>
+          </View>
+        )}
+      </SafeAreaView>
     </View>
   );
 }
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  fullDeviceBase: {
+    flex:1,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  safeAreaRoot:{
+    flex:1,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  activityIndicatorContainer: {
+    flex:1,
+    justifyContent:'center',
+    alignContent:'center'
+  }
 });
 
 export default App;
