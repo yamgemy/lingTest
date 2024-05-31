@@ -1,10 +1,13 @@
-import { setAppThemePO, setLeaderboardSearchQuery } from "@src/actions";
+import { setAppThemePO, setLeaderboardDisplayMode, setLeaderboardSearchQuery } from "@src/actions";
 import { ScalingTouchable } from "@src/components";
 import { Leaderboard } from "@src/components/leaderboard/component";
 import { colors } from "@src/constants";
 import { useThemeChoice } from "@src/hooks/use-theme-choice";
 import leaderboardMockData from '@src/mockdata/leaderboard.json';
-import { leaderboardSearchQuerySelector } from "@src/selectors/leaderboard.reducer";
+import {
+  leaderboardDisplayModeSelector,
+  leaderboardSearchQuerySelector
+} from "@src/selectors/leaderboard.reducer";
 import React, { FC, useCallback, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { IconButton, Searchbar, Surface, Text, useTheme } from "react-native-paper";
@@ -20,6 +23,8 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   const theme = useTheme();
   const styles = getThemedStyles(theme);
 
+  const leaderboardMode = useSelector(leaderboardDisplayModeSelector);
+
   const toggleTheme = useCallback(() => {
     const themeNow = getChosenAppTheme();
     const nextTheme = themeNow === 'dark' ? 'light' : 'dark';
@@ -33,24 +38,35 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   const [searchQueryToHit, setSearchQueryToHit] = React.useState('');
 
   const handleSearchInputTextChange = useCallback((text: string) => {
-    dispatch(setLeaderboardSearchQuery(text));
+    dispatch(setLeaderboardDisplayMode('suggestions'));
+    dispatch(setLeaderboardSearchQuery(text.toLowerCase().trim()));
   }, [dispatch]);
 
   const onSearchPress = useDebouncedCallback(useCallback(() => {
+    dispatch(setLeaderboardDisplayMode('results'));
     setSearchQueryToHit(searchQuery.toLowerCase().trim());
-  },[searchQuery]), 300);
+  },[searchQuery,dispatch]), 300);
+
+  const onSuggestionPress = useDebouncedCallback(useCallback((selection:string) => {
+    dispatch(setLeaderboardDisplayMode('results'));
+    dispatch(setLeaderboardSearchQuery(selection.toLowerCase().trim()));
+    setSearchQueryToHit(selection.toLowerCase().trim());
+  },[dispatch]), 300);
 
   useEffect(()=>{
-    !searchQuery && setSearchQueryToHit('');
-  },[searchQuery]);
+    if (!searchQuery) {
+      dispatch(setLeaderboardDisplayMode('results'));
+      setSearchQueryToHit('');
+    }
+  },[searchQuery,dispatch]);
 
   const isLastSearchLoaded = useRef<boolean>(false);
   useEffect(()=> {
-    if (!isLastSearchLoaded.current){
+    if (!isLastSearchLoaded.current && leaderboardMode === 'results'){
       isLastSearchLoaded.current = true;
       onSearchPress();
     }
-  }, [searchQuery, onSearchPress]);
+  }, [searchQuery, onSearchPress, leaderboardMode]);
 
   return ( 
     <View style={styles.root}>
@@ -94,6 +110,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
         <Leaderboard 
             source={leaderboardMockData} 
             searchQueryDynamic={searchQuery}
+            onSuggestionSelected={onSuggestionPress}
             searchQueryToHit={searchQueryToHit}/>
       </View>
     </View>

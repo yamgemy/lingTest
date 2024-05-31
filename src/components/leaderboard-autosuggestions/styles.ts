@@ -1,7 +1,15 @@
 import { Dimensions, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  emptyListContainer: {
+  footer:{
+    height: 300
+  },
+  title:{
+    height: 30,
+    fontSize: 20,
+    fontWeight: '500'
+  },
+  listEmptyWrap:{
     flex:1,
     height:Dimensions.get('screen').height/2,
     justifyContent:'center',
@@ -9,8 +17,5 @@ export const styles = StyleSheet.create({
   },
   listEmptyMessage:{
     textAlign:'center'
-  },
-  listFooter:{
-    height: 300
   }
 });

@@ -2432,6 +2432,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sanar/react-native-highlight-text@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@sanar/react-native-highlight-text@npm:1.0.2"
+  dependencies:
+    highlight-words-core: ^1.2.0
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: ec328160407b4fa711b52deebff15ba1ba0e4a380ac8aa4ebb6232a0f464b811bdcad8567cdbee1944a09afbac85a5a1794ca5c35f6520412dad7c755ae1e6db
+  languageName: node
+  linkType: hard
+
 "@sideway/address@npm:^4.1.5":
   version: 4.1.5
   resolution: "@sideway/address@npm:4.1.5"
@@ -5451,6 +5464,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"highlight-words-core@npm:^1.2.0":
+  version: 1.2.2
+  resolution: "highlight-words-core@npm:1.2.2"
+  checksum: 737758a8a572c82919552b031df300016164b7d0db6a819d24bc6c7ca2279d3cd6d03497728930d6402423c7a3fc2f42c628a9b01b025c704a0b56a635377511
+  languageName: node
+  linkType: hard
+
 "hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
@@ -6836,6 +6856,7 @@ __metadata:
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-community/eslint-config": ^3.2.0
     "@react-native/typescript-config": ^0.74.0
+    "@sanar/react-native-highlight-text": ^1.0.2
     "@tsconfig/react-native": ^2.0.2
     "@types/jest": ^29.2.1
     "@types/react": ^18.0.24
