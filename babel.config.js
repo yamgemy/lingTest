@@ -27,7 +27,8 @@ module.exports = {
           '@types': './src/types',
           '@utils': './src/utils',
           '@dto': './src/dto',
-          '@contexts': './src/contexts'
+          '@contexts': './src/contexts',
+          '@mockdata': './src/mockdata'
         },
       },
     ],

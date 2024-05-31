@@ -123,6 +123,9 @@
       ],
       "@contexts/*": [
         "src/contexts/*"
+      ],
+      "@mockdata/*": [
+        "src/mockdata/*"
       ]
     },
   },
