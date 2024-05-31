@@ -9,5 +9,8 @@ export const styles = StyleSheet.create({
   },
   listEmptyMessage:{
     textAlign:'center'
+  },
+  listFooter:{
+    height: 300
   }
 });

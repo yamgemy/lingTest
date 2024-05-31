@@ -1,22 +1,30 @@
 import { LeaderboardItemProps } from '@src/mockdata/types';
+import { leaderboardDisplayModeSelector } from '@src/selectors/leaderboard.reducer';
 import React, { FC, useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { slugify } from 'transliteration';
+import { LeaderboardAutosuggestions } from '../leaderboard-autosuggestions';
 import { LeaderboardRowItem } from '../leaderboard-row-item/component';
+import { labels } from './constants';
 import { styles } from './styles';
 
 export type LeaderboardProps = {
   source: Record<string, Record<string, any>>
   searchQueryToHit?: Maybe<string>
   searchQueryDynamic: Maybe<string>
+  onSuggestionSelected: (selection:string)=> void
 }
 
 export const Leaderboard:FC<LeaderboardProps> = ({
   source,
   searchQueryToHit,
-  searchQueryDynamic
+  searchQueryDynamic,
+  onSuggestionSelected
 }) => {
+
+  const mode = useSelector(leaderboardDisplayModeSelector);
 
   const flattenedSource = useMemo(()=> {
     const raw = Object.values(source) as Array<LeaderboardItemProps>;
@@ -54,26 +62,33 @@ export const Leaderboard:FC<LeaderboardProps> = ({
   }, [flattenedSource.length, searchQueryToHit]);
 
   return(
-    <FlatList 
-        data={queryHits} 
-        renderItem={renderLeaderboardItem}
-        ListFooterComponent={<View style={{height:300}}/>}
-        keyExtractor={(item)=> item.uid}
-        ListEmptyComponent={
-          <View style={styles.emptyListContainer}>
-            {(searchQueryToHit && queryHits.length === 0 )&& (
+    mode === 'suggestions' ? (
+      <LeaderboardAutosuggestions
+          searchQuery={searchQueryDynamic??''}
+          source={flattenedSource}
+          onSelect={onSuggestionSelected}
+      />
+    ): (
+      <FlatList 
+          data={queryHits} 
+          renderItem={renderLeaderboardItem}
+          ListFooterComponent={<View style={styles.listFooter}/>}
+          keyExtractor={(item)=> item.uid}
+          ListEmptyComponent={
+            <View style={styles.emptyListContainer}>
+              {(searchQueryToHit && queryHits.length === 0 )&& (
               <Text style={styles.listEmptyMessage}>
-                This user name does not exist! Please specify an existing user name!
+                {labels.noResults}
                 </Text>
             )}
-            {(!searchQueryDynamic)&& (
-            <Text style={styles.listEmptyMessage}>
-              Enter user name and hit the Search button to begin
-            </Text>
+              {(!searchQueryDynamic)&& (
+              <Text style={styles.listEmptyMessage}>
+                {labels.beforeQuery}
+              </Text>
             )}
-          </View>
+            </View>
         }
     />
+    )
   );
-
 };

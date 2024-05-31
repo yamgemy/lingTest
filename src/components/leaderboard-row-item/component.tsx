@@ -1,11 +1,11 @@
-import { LeaderboardItemExtraProps, LeaderboardItemProps } from "@src/mockdata/types";
+import { LeaderboardItemWithExtraProps } from "@src/mockdata/types";
 import React, { FC, useMemo } from "react";
 import { Surface, Text, useTheme } from "react-native-paper";
 import { ScalingTouchable } from "../scaling-touchable";
 import { UseThemedStyles } from "./styles";
 
 export type LeaderboardRowItemProps = {
-  entity: LeaderboardItemProps & LeaderboardItemExtraProps
+  entity: LeaderboardItemWithExtraProps
   isLast: boolean,
   index: number,
   searchQuery?: Maybe<string>

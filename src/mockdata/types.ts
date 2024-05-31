@@ -6,10 +6,9 @@ export type LeaderboardItemProps = {
   stars : number,
   subscribed : boolean,
   uid : string,
-  rank?: number
 }
 
-export type LeaderboardItemExtraProps = {
+export type LeaderboardItemWithExtraProps = LeaderboardItemProps &{
   rank?: number;
   nameInPinyin?: string;
 }
