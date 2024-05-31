@@ -4,12 +4,17 @@ import { MD3Theme } from "react-native-paper";
 export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
   root:{
     flex:1,
-    backgroundColor: theme.colors.background
+    backgroundColor: theme.colors.background,
+    paddingTop: 20
+  },
+  section:{
+    marginHorizontal: 10
   },
   searchRow: {
     flexDirection:'row',
-    height: 50,
-
+    height: 70,
+    paddingBottom: 20,
+    backgroundColor:theme.colors.background
   },
   searchInputContainer:{
     flex:4
@@ -20,6 +25,13 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
   },
   searchButton:{
     height: 50,
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius: 20,
+    backgroundColor: theme.colors.primary
+  },
+  searchButtonDisabled:{
+    backgroundColor: theme.colors.surfaceDisabled
   },
   searchButtonContent:{
     height: 50,

@@ -1,10 +1,12 @@
 import { setAppThemePO } from "@src/actions";
 import { ScalingTouchable } from "@src/components";
+import { Leaderboard } from "@src/components/leaderboard/component";
 import { colors } from "@src/constants";
 import { useThemeChoice } from "@src/hooks/use-theme-choice";
-import React, { FC, useCallback } from "react";
+import leaderboardMockData from '@src/mockdata/leaderboard.json';
+import React, { FC, useCallback, useEffect } from "react";
 import { View } from "react-native";
-import { Button, IconButton, Searchbar, useTheme } from "react-native-paper";
+import { IconButton, Searchbar, Surface, Text, useTheme } from "react-native-paper";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch } from "react-redux";
 import { getThemedStyles } from "./styles";
@@ -26,15 +28,26 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   const bulbColor = !theme.dark? colors.yellow : colors.grey_600;
 
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQueryToHit, setSearchQueryToHit] = React.useState('');
 
   const onSearchPress = useCallback(() => {
+    setSearchQueryToHit(searchQuery);
+  },[searchQuery]);
 
-  },[]);
+  useEffect(()=>{
+    !searchQuery && setSearchQueryToHit('');
+  },[searchQuery]);
 
   return ( 
     <View style={styles.root}>
-      <IconButton icon={bulbIcon} iconColor={bulbColor} onPress={toggleTheme}/>
-      <View style={styles.searchRow}>
+      <View style={styles.section}>
+        <IconButton icon={bulbIcon} 
+            iconColor={bulbColor} 
+            onPress={toggleTheme}/>
+      </View>
+      <Surface 
+          style={[styles.searchRow, styles.section]} 
+          mode={"flat"}>
         <View style={styles.searchInputContainer}>
           <Searchbar
               style={styles.searchComponent}
@@ -42,25 +55,31 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
               placeholder="User name"
               onChangeText={setSearchQuery}
               value={searchQuery}
+              autoCapitalize="none"
            />
         </View>
         <View style={styles.searchButtonContainer}>
-          <ScalingTouchable >
-            <Button 
-                disabled={!searchQuery}
-                labelStyle={styles.searchButtonLabel}
-                contentStyle={styles.searchButtonContent}
-                style={styles.searchButton}
-                mode={'contained'}
-                onPress={onSearchPress}
-          >
-              Search
-            </Button>
+          <ScalingTouchable disabled={!searchQuery} onPress={onSearchPress}>
+            <Surface 
+                mode={"flat"} 
+                style={[styles.searchButton, 
+                  !searchQuery && styles.searchButtonDisabled
+                ]}
+            >
+              <Text                
+                  style={styles.searchButtonLabel}>
+                Search
+              </Text>
+            </Surface>
           </ScalingTouchable>
         </View>
-
+      </Surface>
+      <View style={styles.section}>
+        <Leaderboard 
+            source={leaderboardMockData} 
+            searchQueryDynamic={searchQuery}
+            searchQueryToHit={searchQueryToHit}/>
       </View>
-
     </View>
   );
 };

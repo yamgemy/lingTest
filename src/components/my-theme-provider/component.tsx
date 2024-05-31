@@ -13,7 +13,6 @@ export const MyThemeProvider:FC<MyThemeProviderProps>= ({
 }) => {
   const {getChosenAppTheme} = useThemeChoice();
   const { theme } = useMaterial3Theme();
-  console.log('asdf', getChosenAppTheme());
 
   const themeToSet : MD3Theme = useMemo(()=> {
     return getChosenAppTheme() === 'light'? 
