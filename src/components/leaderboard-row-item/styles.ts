@@ -11,6 +11,10 @@ export const UseThemedStyles = (theme: MD3Theme, index: number) => {
     return index % 2 === 0 ? theme.colors.onSecondary: colors.green ;
   },[theme, index]);
 
+  const queryHitRowColor = useMemo(()=> {
+    return theme.dark ? theme.colors.onTertiary: colors.red_500_lighter;
+  }, [theme]);
+
   return StyleSheet.create({
     rowRoot: {
       flexDirection: 'row',
@@ -36,9 +40,10 @@ export const UseThemedStyles = (theme: MD3Theme, index: number) => {
       borderTopColor: theme.colors.surface
     },
     nameTextHitsQuery:{
-      color:colors.red_800
+      color:colors.red_800,
+      fontWeight: '700'
     },
-    lastRightCell: {
+    lastRightCell: { 
       borderRightColor: theme.colors.onSurface,
       borderRightWidth: 0
     },
@@ -47,6 +52,6 @@ export const UseThemedStyles = (theme: MD3Theme, index: number) => {
       borderBottomColor: theme.colors.surface
     },
     rowHitsQuery:{
-      backgroundColor: colors.red_100
+      backgroundColor: queryHitRowColor
     }
   });};

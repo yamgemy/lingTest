@@ -31,7 +31,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   const [searchQueryToHit, setSearchQueryToHit] = React.useState('');
 
   const onSearchPress = useCallback(() => {
-    setSearchQueryToHit(searchQuery);
+    setSearchQueryToHit(searchQuery.toLowerCase().trim());
   },[searchQuery]);
 
   useEffect(()=>{
