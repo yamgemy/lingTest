@@ -6867,6 +6867,7 @@ __metadata:
     redux-persist: ^6.0.0
     transliteration: ^2.3.5
     typescript: ^5.4.5
+    use-debounce: ^10.0.1
   languageName: unknown
   linkType: soft
 
@@ -9919,6 +9920,15 @@ __metadata:
   dependencies:
     punycode: ^2.1.0
   checksum: 7167432de6817fe8e9e0c9684f1d2de2bb688c94388f7569f7dbdb1587c9f4ca2a77962f134ec90be0cc4d004c939ff0d05acc9f34a0db39a3c797dada262633
+  languageName: node
+  linkType: hard
+
+"use-debounce@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "use-debounce@npm:10.0.1"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 6b53d2b9b1856bacfa4dffd78234bba744792e1d75c194af0642faf1ac2914ebdcc770ac23b7e59ca999f997d969edf3c75d22362879818927d20d3408dd59db
   languageName: node
   linkType: hard
 

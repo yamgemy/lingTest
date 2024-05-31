@@ -8,7 +8,7 @@ export const UseThemedStyles = (theme: MD3Theme, index: number) => {
     if (theme.dark){
       return index%2 ===0 ? theme.colors.onSecondary: theme.colors.onPrimary;
     }
-    return index % 2 === 0 ? theme.colors.onSecondary: colors.green ;
+    return index % 2 === 0 ? theme.colors.onSecondary: colors.light_green ;
   },[theme, index]);
 
   const queryHitRowColor = useMemo(()=> {

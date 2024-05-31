@@ -1,3 +1,4 @@
+import { colors } from "@src/constants";
 import { StyleSheet } from "react-native";
 import { MD3Theme } from "react-native-paper";
 
@@ -28,7 +29,7 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     borderRadius: 20,
-    backgroundColor: theme.colors.primary
+    backgroundColor: theme.dark ? theme.colors.onTertiary : theme.colors.primary
   },
   searchButtonDisabled:{
     backgroundColor: theme.colors.surfaceDisabled
@@ -38,7 +39,8 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
   },
   searchButtonLabel:{
     padding:0,
-    marginHorizontal: 0 
+    marginHorizontal: 0,
+    color: theme.dark ? colors.grey_100: theme.colors.onPrimary
   },
   searchComponent:{
     height: 50,

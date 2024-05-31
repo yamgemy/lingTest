@@ -9,6 +9,7 @@ import { View } from "react-native";
 import { IconButton, Searchbar, Surface, Text, useTheme } from "react-native-paper";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch } from "react-redux";
+import { useDebouncedCallback } from "use-debounce";
 import { getThemedStyles } from "./styles";
 MaterialCommunityIcon.loadFont();
 
@@ -30,9 +31,9 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchQueryToHit, setSearchQueryToHit] = React.useState('');
 
-  const onSearchPress = useCallback(() => {
+  const onSearchPress = useDebouncedCallback(useCallback(() => {
     setSearchQueryToHit(searchQuery.toLowerCase().trim());
-  },[searchQuery]);
+  },[searchQuery]), 300);
 
   useEffect(()=>{
     !searchQuery && setSearchQueryToHit('');
@@ -41,7 +42,9 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   return ( 
     <View style={styles.root}>
       <View style={styles.section}>
-        <IconButton icon={bulbIcon} 
+        <IconButton 
+            mode={'contained'}
+            icon={bulbIcon} 
             iconColor={bulbColor} 
             onPress={toggleTheme}/>
       </View>
