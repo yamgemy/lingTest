@@ -26,7 +26,7 @@ export const LeaderboardAutosuggestItem:FC<LeaderboardAutosuggestItemProps> = ({
   
   return (
     <ScalingTouchable onPress={handleSuggestionItemPress}>
-      <Surface style={styles.suggestionRow}>
+      <Surface style={styles.suggestionRow} mode='elevated' elevation={1}>
         <HighlightText
             highlightStyle={styles.highlight}
             // @ts-ignore
