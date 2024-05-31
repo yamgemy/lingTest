@@ -1,9 +1,10 @@
 import { setAppThemePO } from "@src/actions";
 import { ScalingTouchable } from "@src/components";
+import { colors } from "@src/constants";
 import { useThemeChoice } from "@src/hooks/use-theme-choice";
 import React, { FC, useCallback } from "react";
 import { View } from "react-native";
-import { Button, Searchbar, Text, useTheme } from "react-native-paper";
+import { Button, IconButton, Searchbar, useTheme } from "react-native-paper";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch } from "react-redux";
 import { getThemedStyles } from "./styles";
@@ -17,9 +18,12 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
 
   const toggleTheme = useCallback(() => {
     const themeNow = getChosenAppTheme();
-    const nextThem = themeNow === 'dark' ? 'light' : 'dark';
-    dispatch(setAppThemePO(nextThem));
+    const nextTheme = themeNow === 'dark' ? 'light' : 'dark';
+    dispatch(setAppThemePO(nextTheme));
   },[dispatch,getChosenAppTheme]);
+
+  const bulbIcon = !theme.dark? 'lightbulb' :'lightbulb-off';
+  const bulbColor = !theme.dark? colors.yellow : colors.grey_600;
 
   const [searchQuery, setSearchQuery] = React.useState('');
 
@@ -29,9 +33,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
 
   return ( 
     <View style={styles.root}>
-      <ScalingTouchable onPress={toggleTheme}>
-        <Text theme={theme}>Toggle Theme</Text>
-      </ScalingTouchable>
+      <IconButton icon={bulbIcon} iconColor={bulbColor} onPress={toggleTheme}/>
       <View style={styles.searchRow}>
         <View style={styles.searchInputContainer}>
           <Searchbar
