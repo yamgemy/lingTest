@@ -29,7 +29,7 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps> = ({
   const theme = useTheme();
   const styles = getThemedStyles(theme);
 
-  const handleSortPressed = useCallback((item:SortButtonAttributes) => ()=> {
+  const handleSortPressed = useCallback((item:SortButtonAttributes) => () => {
     const {sortOrder, keyToSort} = item;
 
     const newSortOrders = allocations.reduce((acc, item)=> {
@@ -37,38 +37,29 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps> = ({
         acc.push({...item, sortOrder: item.sortOrder === 'ASC'? 'DESC': 'ASC' });
         return acc;
       }
-      else {
-        acc.push(item);
-      }
+      acc.push(item);
       return acc;
     }, [] as SortButtonAttributes[]);
-    setSortOrders(newSortOrders);
+    setSortOrders(newSortOrders); //rerender sort button row
+    
     let sorted = [] as LeaderboardItemWithExtraProps[];
-    if (typeof sourceToSort[0][keyToSort] === "string"){
+    const typeOfValueToSort = typeof sourceToSort[0][keyToSort];
+
+    if (typeOfValueToSort=== "string"){
       sorted = sourceToSort.sort((a,b)=> {
-        if (sortOrder === 'ASC'){
-          return b[keyToSort].localeCompare(a[keyToSort]);
-        }
-        if (sortOrder === 'DESC') {
-          return a[keyToSort].localeCompare(b[keyToSort]);
-        }
+        return sortOrder === 'ASC'? 
+          b[keyToSort].localeCompare(a[keyToSort]) 
+          : a[keyToSort].localeCompare(b[keyToSort]);
       })as LeaderboardItemWithExtraProps[];
     }
 
-    if (typeof sourceToSort[0][keyToSort] === "number"){
-      sorted = sourceToSort.sort((a,b) =>{
-        if (sortOrder === 'ASC'){
-          return b[keyToSort] - a[keyToSort]; //reverse from 'ASC'
-        }
-        if (sortOrder === 'DESC') {
-          return a[keyToSort] - b[keyToSort]; //revere from 'DESC'
-        }
-        return 0;
-      }) as LeaderboardItemWithExtraProps[];
-    }
+    sorted = sourceToSort.sort((a,b) =>{
+      return sortOrder === 'ASC'? 
+        b[keyToSort] - a[keyToSort]: 
+        a[keyToSort] - b[keyToSort];
+    }) as LeaderboardItemWithExtraProps[];
 
-    setResults(sorted);
-
+    setResults(sorted); //rerender result list
   },[allocations, setResults, setSortOrders, sourceToSort]);
 
   return (
@@ -94,5 +85,4 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps> = ({
         ))}
     </View>
   );
-
 };
