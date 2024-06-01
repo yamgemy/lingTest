@@ -1,13 +1,14 @@
-import { LeaderboardItemProps } from '@src/mockdata/types';
+import { LeaderboardItemProps, LeaderboardItemWithExtraProps } from '@src/mockdata/types';
 import { leaderboardDisplayModeSelector } from '@src/selectors/leaderboard.reducer';
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { slugify } from 'transliteration';
 import { LeaderboardAutosuggestions } from '../leaderboard-autosuggestions';
 import { LeaderboardRowItem } from '../leaderboard-row-item/component';
-import { labels } from './constants';
+import { SortButtonAttributes, SortButtonsHeaderRow } from '../sort-buttons-header-row';
+import { defaultSortOrders, labels } from './constants';
 import { styles } from './styles';
 
 export type LeaderboardProps = {
@@ -50,6 +51,13 @@ export const Leaderboard:FC<LeaderboardProps> = ({
     return [];
   },[searchQueryToHit, flattenedSource]);
 
+  const [results, setResults] = useState<Array<LeaderboardItemWithExtraProps>>([]);
+  const [sortOrders, setSortOrders] = useState<Array<SortButtonAttributes>>(defaultSortOrders);
+  
+  useEffect(()=> {
+    setResults(queryHits);
+  },[queryHits]);
+
   const renderLeaderboardItem = useCallback(({ item, index }: ListRenderItemInfo<LeaderboardItemProps>) => {
     const isLast = index === flattenedSource.length -1;
     return (
@@ -70,8 +78,16 @@ export const Leaderboard:FC<LeaderboardProps> = ({
       />
     ): (
       <FlatList 
-          data={queryHits} 
+          data={results} 
           renderItem={renderLeaderboardItem}
+          ListHeaderComponent={
+            <SortButtonsHeaderRow 
+                sourceToSort={results}
+                setResults={setResults}
+                setSortOrders={setSortOrders}
+                allocations={sortOrders}
+            />
+          }
           ListFooterComponent={<View style={styles.listFooter}/>}
           keyExtractor={(item)=> item.uid}
           ListEmptyComponent={
