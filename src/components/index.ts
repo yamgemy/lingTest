@@ -4,3 +4,4 @@ export * from './leaderboard-autosuggestions';
 export * from './my-status-bar';
 export * from './my-theme-provider';
 export * from './scaling-touchable';
+export * from './theme-toggler';
