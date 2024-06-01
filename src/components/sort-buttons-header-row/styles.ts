@@ -12,8 +12,9 @@ export const getThemedStyles = (theme: MD3Theme) => StyleSheet.create({
   sortSurface:{
     height: 50,
     flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center'
+    justifyContent:'flex-start',
+    alignItems:'center',
+    paddingHorizontal: 5
   }
 
 });

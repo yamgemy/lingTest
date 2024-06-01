@@ -64,10 +64,11 @@ export const Leaderboard:FC<LeaderboardProps> = ({
       <LeaderboardRowItem 
           entity={item} 
           isLast={isLast} 
-          index={index} 
+          index={index}
+          sortOrders={sortOrders}
           searchQuery={searchQueryToHit}/>
     );
-  }, [flattenedSource.length, searchQueryToHit]);
+  }, [flattenedSource.length, searchQueryToHit, sortOrders]);
 
   return(
     mode === 'suggestions' ? (
