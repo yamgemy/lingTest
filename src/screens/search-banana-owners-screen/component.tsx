@@ -1,8 +1,7 @@
-import { setAppThemePO, setLeaderboardDisplayMode, setLeaderboardSearchQuery } from "@src/actions";
+import { setLeaderboardDisplayMode, setLeaderboardSearchQuery } from "@src/actions";
 import { ScalingTouchable } from "@src/components";
 import { Leaderboard } from "@src/components/leaderboard/component";
-import { colors } from "@src/constants";
-import { useThemeChoice } from "@src/hooks/use-theme-choice";
+import { ThemeToggler } from "@src/components/theme-toggler/component";
 import leaderboardMockData from '@src/mockdata/leaderboard.json';
 import {
   leaderboardDisplayModeSelector,
@@ -10,30 +9,20 @@ import {
 } from "@src/selectors/leaderboard.reducer";
 import React, { FC, useCallback, useEffect, useRef } from "react";
 import { View } from "react-native";
-import { IconButton, Searchbar, Surface, Text, useTheme } from "react-native-paper";
+import { Searchbar, Surface, Text, useTheme } from "react-native-paper";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from "react-redux";
 import { useDebouncedCallback } from "use-debounce";
+import { labels } from "./constants";
 import { getThemedStyles } from "./styles";
 MaterialCommunityIcon.loadFont();
 
 export const SearchBananaOwnersScreen:FC<any> = () => {
   const dispatch = useDispatch();
-  const {getChosenAppTheme} = useThemeChoice();
   const theme = useTheme();
   const styles = getThemedStyles(theme);
 
-  const leaderboardMode = useSelector(leaderboardDisplayModeSelector);
-
-  const toggleTheme = useCallback(() => {
-    const themeNow = getChosenAppTheme();
-    const nextTheme = themeNow === 'dark' ? 'light' : 'dark';
-    dispatch(setAppThemePO(nextTheme));
-  },[dispatch,getChosenAppTheme]);
-
-  const bulbIcon = !theme.dark? 'lightbulb' :'lightbulb-off';
-  const bulbColor = !theme.dark? colors.yellow : colors.grey_600;
-
+  const leaderboardMode = useSelector(leaderboardDisplayModeSelector);;
   const searchQuery = useSelector(leaderboardSearchQuerySelector);
   const [searchQueryToHit, setSearchQueryToHit] = React.useState('');
 
@@ -53,6 +42,15 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
     setSearchQueryToHit(selection.toLowerCase().trim());
   },[dispatch]), 300);
 
+  //@ts-ignore
+  const handleKeyPress = useCallback(({ nativeEvent: { key: keyValue } }) => {
+    console.log(keyValue);
+    if(keyValue === 'Enter')
+    {
+      console.log("enter");
+    }
+  },[]);
+
   useEffect(()=>{
     if (!searchQuery) {
       dispatch(setLeaderboardDisplayMode('results'));
@@ -71,11 +69,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   return ( 
     <View style={styles.root}>
       <View style={styles.section}>
-        <IconButton 
-            mode={'contained'}
-            icon={bulbIcon} 
-            iconColor={bulbColor} 
-            onPress={toggleTheme}/>
+        <ThemeToggler/>
       </View>
       <Surface 
           style={[styles.searchRow, styles.section]} 
@@ -88,19 +82,22 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
               onChangeText={handleSearchInputTextChange}
               value={searchQuery}
               autoCapitalize="none"
+              numberOfLines={1}
+              onKeyPress={handleKeyPress}
            />
         </View>
         <View style={styles.searchButtonContainer}>
-          <ScalingTouchable disabled={!searchQuery} onPress={onSearchPress}>
+          <ScalingTouchable 
+              disabled={!searchQuery}
+              onPress={onSearchPress}>
             <Surface 
                 mode={"flat"} 
                 style={[styles.searchButton, 
                   !searchQuery && styles.searchButtonDisabled
                 ]}
             >
-              <Text                
-                  style={styles.searchButtonLabel}>
-                Search
+              <Text style={styles.searchButtonLabel}>
+                {labels.search_btn}
               </Text>
             </Surface>
           </ScalingTouchable>
