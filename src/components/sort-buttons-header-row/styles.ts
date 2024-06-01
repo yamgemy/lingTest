@@ -16,5 +16,4 @@ export const getThemedStyles = (theme: MD3Theme) => StyleSheet.create({
     alignItems:'center',
     paddingHorizontal: 5
   }
-
 });

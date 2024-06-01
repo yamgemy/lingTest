@@ -82,12 +82,16 @@ export const Leaderboard:FC<LeaderboardProps> = ({
           data={results} 
           renderItem={renderLeaderboardItem}
           ListHeaderComponent={
-            <SortButtonsHeaderRow 
-                sourceToSort={results}
-                setResults={setResults}
-                setSortOrders={setSortOrders}
-                allocations={sortOrders}
-            />
+            <>
+              {results.length > 0 && (
+              <SortButtonsHeaderRow 
+                  sourceToSort={results}
+                  setResults={setResults}
+                  setSortOrders={setSortOrders}
+                  allocations={sortOrders}
+              />
+              )}
+            </>
           }
           ListFooterComponent={<View style={styles.listFooter}/>}
           keyExtractor={(item)=> item.uid}
