@@ -1,12 +1,17 @@
-import { setLeaderboardDisplayMode, setLeaderboardSearchQuery } from "@src/actions";
+import {
+  setLeaderboardDisplayMode,
+  setLeaderboardSearchQuery,
+  setLeaderboardSortAttributes
+} from "@src/actions";
 import { ScalingTouchable } from "@src/components";
 import { Leaderboard } from "@src/components/leaderboard/component";
+import { defaultSortOrders } from "@src/components/leaderboard/constants";
 import { ThemeToggler } from "@src/components/theme-toggler/component";
 import leaderboardMockData from '@src/mockdata/leaderboard.json';
 import {
   leaderboardDisplayModeSelector,
   leaderboardSearchQuerySelector
-} from "@src/selectors/leaderboard.reducer";
+} from "@src/selectors/leaderboard.selectors";
 import React, { FC, useCallback, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { Searchbar, Surface, Text, useTheme } from "react-native-paper";
@@ -27,6 +32,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
   const [searchQueryToHit, setSearchQueryToHit] = React.useState('');
 
   const handleSearchInputTextChange = useCallback((text: string) => {
+    dispatch(setLeaderboardSortAttributes(defaultSortOrders));
     dispatch(setLeaderboardDisplayMode('suggestions'));
     dispatch(setLeaderboardSearchQuery(text.toLowerCase().trim()));
   }, [dispatch]);
@@ -60,6 +66,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
 
   const isLastSearchLoaded = useRef<boolean>(false);
   useEffect(()=> {
+    if (!searchQuery) {return;}
     if (!isLastSearchLoaded.current && leaderboardMode === 'results'){
       isLastSearchLoaded.current = true;
       onSearchPress();

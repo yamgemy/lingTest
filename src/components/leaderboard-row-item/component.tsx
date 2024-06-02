@@ -34,6 +34,7 @@ export const LeaderboardRowItem :FC<LeaderboardRowItemProps> = ({
 
   return (
     <ScalingTouchable onPress={()=>{}}>
+      {sortOrders && (
       <Surface 
           style={[
             styles.rowRoot, 
@@ -56,6 +57,7 @@ export const LeaderboardRowItem :FC<LeaderboardRowItemProps> = ({
           <Text>{entity.bananas}</Text>
         </Surface>
       </Surface>
+      )}
     </ScalingTouchable>
   );
 };

@@ -1,4 +1,4 @@
-import { SortButtonAttributes } from "../sort-buttons-header-row";
+import { SortButtonAttributes } from "../sort-buttons-header-row/types";
 
 export const labels = {
   noResults: 'This user name does not exist! Please specify an existing user name!',

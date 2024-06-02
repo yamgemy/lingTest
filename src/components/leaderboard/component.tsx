@@ -1,22 +1,19 @@
-import { LeaderboardItemProps, LeaderboardItemWithExtraProps } from '@src/mockdata/types';
-import { leaderboardDisplayModeSelector } from '@src/selectors/leaderboard.reducer';
+import { LeaderboardItemProps } from '@src/mockdata/types';
+import {
+  leaderboardDisplayModeSelector,
+  leaderboardSortAttributesSelector
+} from '@src/selectors/leaderboard.selectors';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { slugify } from 'transliteration';
 import { LeaderboardAutosuggestions } from '../leaderboard-autosuggestions';
 import { LeaderboardRowItem } from '../leaderboard-row-item/component';
-import { SortButtonAttributes, SortButtonsHeaderRow } from '../sort-buttons-header-row';
-import { defaultSortOrders, labels } from './constants';
+import { SortButtonsHeaderRow, } from '../sort-buttons-header-row';
+import { labels } from './constants';
 import { styles } from './styles';
-
-export type LeaderboardProps = {
-  source: Record<string, Record<string, any>>
-  searchQueryToHit?: Maybe<string>
-  searchQueryDynamic: Maybe<string>
-  onSuggestionSelected: (selection:string)=> void
-}
+import { LeaderboardProps, SortedResults } from './types';
 
 export const Leaderboard:FC<LeaderboardProps> = ({
   source,
@@ -24,7 +21,9 @@ export const Leaderboard:FC<LeaderboardProps> = ({
   searchQueryDynamic,
   onSuggestionSelected
 }) => {
-
+  const dispatch = useDispatch();
+  const sortAttributes = useSelector(leaderboardSortAttributesSelector);
+  const [results, setResults] = useState<SortedResults>();
   const mode = useSelector(leaderboardDisplayModeSelector);
 
   const flattenedSource = useMemo(()=> {
@@ -37,26 +36,26 @@ export const Leaderboard:FC<LeaderboardProps> = ({
   }, [source]);
 
   const queryHits = useMemo(()=> {
-    if (searchQueryToHit === 'all') {return flattenedSource;}
+    if (searchQueryToHit === 'everything') {return flattenedSource;}
     if (!searchQueryToHit) {return [];}
     const topTen = flattenedSource.slice(0,10);
     if (topTen.find(i=> i.name.toLowerCase().includes(searchQueryToHit))){
       return topTen;
     }
     const target = flattenedSource.find(i=>i.name.toLowerCase().includes(searchQueryToHit));
-    console.log('queryHits', target);
     if (target){
       return topTen.slice(0,9).concat([target]);
     }
     return [];
   },[searchQueryToHit, flattenedSource]);
-
-  const [results, setResults] = useState<Array<LeaderboardItemWithExtraProps>>([]);
-  const [sortOrders, setSortOrders] = useState<Array<SortButtonAttributes>>(defaultSortOrders);
   
   useEffect(()=> {
-    setResults(queryHits);
-  },[queryHits]);
+    setResults({
+      keyToSort: 'rank',
+      currentSortOrder:'ASC',
+      data: queryHits
+    });
+  },[queryHits, dispatch]);
 
   const renderLeaderboardItem = useCallback(({ item, index }: ListRenderItemInfo<LeaderboardItemProps>) => {
     const isLast = index === flattenedSource.length -1;
@@ -65,10 +64,10 @@ export const Leaderboard:FC<LeaderboardProps> = ({
           entity={item} 
           isLast={isLast} 
           index={index}
-          sortOrders={sortOrders}
+          sortOrders={sortAttributes}
           searchQuery={searchQueryToHit}/>
     );
-  }, [flattenedSource.length, searchQueryToHit, sortOrders]);
+  }, [flattenedSource.length, searchQueryToHit, sortAttributes]);
 
   return(
     mode === 'suggestions' ? (
@@ -78,38 +77,37 @@ export const Leaderboard:FC<LeaderboardProps> = ({
           onSelect={onSuggestionSelected}
       />
     ): (
-      <FlatList 
-          data={results} 
-          renderItem={renderLeaderboardItem}
-          ListHeaderComponent={
-            <>
-              {results.length > 0 && (
-              <SortButtonsHeaderRow 
-                  sourceToSort={results}
-                  setResults={setResults}
-                  setSortOrders={setSortOrders}
-                  allocations={sortOrders}
-              />
-              )}
-            </>
-          }
-          ListFooterComponent={<View style={styles.listFooter}/>}
-          keyExtractor={(item)=> item.uid}
-          ListEmptyComponent={
-            <View style={styles.emptyListContainer}>
-              {(searchQueryToHit && queryHits.length === 0 )&& (
-              <Text style={styles.listEmptyMessage}>
-                {labels.noResults}
-                </Text>
-            )}
-              {(!searchQueryDynamic)&& (
-              <Text style={styles.listEmptyMessage}>
-                {labels.beforeQuery}
-              </Text>
-            )}
-            </View>
-        }
-    />
+      <>
+        {results && results.data && (
+        <FlatList 
+            data={results.data} 
+            renderItem={renderLeaderboardItem}
+            ListHeaderComponent={
+              <>
+                {results && results.data.length > 0 && (
+                  <SortButtonsHeaderRow 
+                      sourceToSort={results}
+                      setResults={setResults}
+                      sortButtonAttributes={sortAttributes}
+                  />
+                 )}
+              </>
+            }
+            ListFooterComponent={<View style={styles.listFooter}/>}
+            keyExtractor={(item)=> item.uid}
+            ListEmptyComponent={
+              <View style={styles.emptyListContainer}>
+                {(!searchQueryDynamic)&& (
+                  <Text style={styles.listEmptyMessage}>
+                    {labels.beforeQuery}
+                  </Text>
+                )}
+              </View>
+            }
+        />
+        )}
+      </>
+    
     )
   );
 };
