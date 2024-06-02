@@ -13,7 +13,8 @@ export const defaultSortOrders = [
     keyToSort: 'nameInPinyin', //not name because some names are in chinese
     flex:2,
     sortOrder: 'ASC',
-    sortable: true
+    sortable: true,
+    isCurrentSort: false
   },
   {
     id: 'B',
@@ -21,7 +22,8 @@ export const defaultSortOrders = [
     keyToSort: 'rank',
     flex:1,
     sortOrder: 'ASC',
-    sortable: true
+    sortable: true,
+    isCurrentSort: true
   },
   {
     id: 'C',
@@ -29,7 +31,8 @@ export const defaultSortOrders = [
     keyToSort: 'bananas',
     flex:1,
     sortOrder: 'DESC',
-    sortable: false
+    sortable: false,
+    isCurrentSort: false
   }
 
 ] as SortButtonAttributes[];

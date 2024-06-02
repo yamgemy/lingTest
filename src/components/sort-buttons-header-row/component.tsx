@@ -1,3 +1,4 @@
+import { colors } from "@src/constants";
 import { LeaderboardItemWithExtraProps } from "@src/mockdata/types";
 import React, { FC, useCallback } from "react";
 import { View } from "react-native";
@@ -12,7 +13,8 @@ export type SortButtonAttributes = {
   flex: number, //horizontal space taken up by each sort button in a row
   keyToSort: string, //eg. refers to key in an entity in the leaderboard
   sortOrder: SortOrder,
-  sortable: boolean //whether the button sort is enabled
+  sortable: boolean //whether the button sort is enabled,
+  isCurrentSort: boolean
 }
 export type SortButtonsHeaderRowProps = {
   allocations: Array<SortButtonAttributes>
@@ -34,10 +36,13 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps> = ({
 
     const newSortOrders = allocations.reduce((acc, item)=> {
       if (item.keyToSort === keyToSort){
-        acc.push({...item, sortOrder: item.sortOrder === 'ASC'? 'DESC': 'ASC' });
+        acc.push({...item, 
+          sortOrder: item.sortOrder === 'ASC'? 'DESC': 'ASC' ,
+          isCurrentSort:true
+        });
         return acc;
       }
-      acc.push(item);
+      acc.push({...item, isCurrentSort:false});
       return acc;
     }, [] as SortButtonAttributes[]);
     setSortOrders(newSortOrders); //rerender sort button row
@@ -77,6 +82,7 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps> = ({
             <IconButton 
                 icon={i.sortOrder === 'ASC' ? 'menu-up': 'menu-down'}
                 size={20}
+                iconColor={i.isCurrentSort? colors.red_600 : colors.plainBlack}
                 onPress={handleSortPressed(i)}
             />
             )}
