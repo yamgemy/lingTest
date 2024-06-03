@@ -1,3 +1,4 @@
+import { LeaderboardItemWithExtraProps } from "@src/mockdata/types";
 import { SortButtonAttributes } from "../sort-buttons-header-row/types";
 
 export const labels = {
@@ -35,4 +36,4 @@ export const defaultSortOrders = [
     isCurrentSort: false
   }
 
-] as SortButtonAttributes[];
+] as SortButtonAttributes<LeaderboardItemWithExtraProps>[];

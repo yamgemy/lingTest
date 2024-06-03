@@ -1,4 +1,4 @@
-import { LeaderboardItemProps } from '@src/mockdata/types';
+import { LeaderboardItemProps, LeaderboardItemWithExtraProps } from '@src/mockdata/types';
 import {
   leaderboardDisplayModeSelector,
   leaderboardSortAttributesSelector
@@ -23,7 +23,7 @@ export const Leaderboard:FC<LeaderboardProps> = ({
 }) => {
   const dispatch = useDispatch();
   const sortAttributes = useSelector(leaderboardSortAttributesSelector);
-  const [results, setResults] = useState<SortedResults>();
+  const [results, setResults] = useState<SortedResults<Record<string,any>>>();
   const mode = useSelector(leaderboardDisplayModeSelector);
 
   const flattenedSource = useMemo(()=> {
@@ -53,15 +53,15 @@ export const Leaderboard:FC<LeaderboardProps> = ({
     setResults({
       keyToSort: 'rank',
       currentSortOrder:'ASC',
-      data: queryHits
+      data: queryHits as Array<LeaderboardItemProps>
     });
   },[queryHits, dispatch]);
 
-  const renderLeaderboardItem = useCallback(({ item, index }: ListRenderItemInfo<LeaderboardItemProps>) => {
+  const renderLeaderboardItem = useCallback(({ item, index }: ListRenderItemInfo<Record<string,any>>) => {
     const isLast = index === flattenedSource.length -1;
     return (
       <LeaderboardRowItem 
-          entity={item} 
+          entity={item as LeaderboardItemWithExtraProps} 
           isLast={isLast} 
           index={index}
           sortOrders={sortAttributes}
@@ -89,6 +89,7 @@ export const Leaderboard:FC<LeaderboardProps> = ({
                       sourceToSort={results}
                       setResults={setResults}
                       sortButtonAttributes={sortAttributes}
+                      forecEntitiesSortedAlphabetically={{keyToSort: 'name', enabled: true}}
                   />
                  )}
               </>

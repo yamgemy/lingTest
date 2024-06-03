@@ -1,4 +1,3 @@
-import { LeaderboardItemWithExtraProps } from "@src/mockdata/types";
 import { SortOrder } from "../sort-buttons-header-row/types";
 
 export type LeaderboardProps = {
@@ -8,8 +7,8 @@ export type LeaderboardProps = {
   onSuggestionSelected: (selection:string)=> void
 }
   
-export type SortedResults = {
-  keyToSort: keyof LeaderboardItemWithExtraProps,
+export type SortedResults<EntityType> = {
+  keyToSort: keyof EntityType,
   currentSortOrder: SortOrder,
-  data: LeaderboardItemWithExtraProps[]
+  data: Array<EntityType>
 }
