@@ -1,4 +1,5 @@
 import { LeaderboardItemProps, LeaderboardItemWithExtraProps } from '@src/mockdata/types';
+import { keywordToReturnAllEntities } from '@src/screens/search-banana-owners-screen/constants';
 import {
   leaderboardDisplayModeSelector,
   leaderboardSortAttributesSelector
@@ -19,61 +20,76 @@ export const Leaderboard:FC<LeaderboardProps> = ({
   source,
   searchQueryToHit,
   searchQueryDynamic,
-  onSuggestionSelected
+  onSuggestionSelected,
+  forceAlphabeticalOptions
 }) => {
   const dispatch = useDispatch();
   const sortAttributes = useSelector(leaderboardSortAttributesSelector);
   const [results, setResults] = useState<SortedResults<Record<string,any>>>();
   const mode = useSelector(leaderboardDisplayModeSelector);
 
-  const flattenedSource = useMemo(()=> {
+  const augmentedSource = useMemo(()=> {
     const raw = Object.values(source) as Array<LeaderboardItemProps>;
     const rawWithPinyin = raw.map(i=> ({...i, nameInPinyin: slugify(i.name)}));
-    const sortedByName = rawWithPinyin.sort((a, b) => a.nameInPinyin.localeCompare(b.nameInPinyin));
-    const sortedByBananaCount = sortedByName.sort((a,b)=>b.bananas -a.bananas);
-    const withRank = sortedByBananaCount.map((i, index)=> ({...i, rank: index+1}));
-    return withRank;
+    const groupKey: keyof LeaderboardItemWithExtraProps = 'bananas';
+    const keyToKeepAlphabetical: keyof LeaderboardItemWithExtraProps = 'nameInPinyin';
+
+    const groupedByBananas = rawWithPinyin.reduce((acc, item)=> {
+      if (!acc[groupKey]){
+        acc[groupKey] = [];
+      }
+      acc[groupKey].push(item);
+      acc[groupKey].sort((a,b)=> 
+        //this hardwires a default name order as ASC along DESC bananas
+        a[keyToKeepAlphabetical]?.localeCompare(b[keyToKeepAlphabetical]) 
+      );
+      return acc;
+    }, {} as Record<string, LeaderboardItemWithExtraProps[]>);
+
+    const sortedByBananaCountDESC = Object.values(groupedByBananas).flatMap(subArr=>subArr)
+      .sort((a,b)=> b[groupKey] - a[groupKey]).map((entity, index)=> ({...entity, rank: index+1}));
+    return sortedByBananaCountDESC;
   }, [source]);
 
-  const queryHits = useMemo(()=> {
-    if (searchQueryToHit === 'everything') {return flattenedSource;}
+  const queryHits : LeaderboardItemWithExtraProps[]= useMemo(()=> {
+    if (searchQueryToHit === keywordToReturnAllEntities) {return augmentedSource;}
     if (!searchQueryToHit) {return [];}
-    const topTen = flattenedSource.slice(0,10);
+    const topTen = augmentedSource.slice(0,10);
     if (topTen.find(i=> i.name.toLowerCase().includes(searchQueryToHit))){
       return topTen;
     }
-    const target = flattenedSource.find(i=>i.name.toLowerCase().includes(searchQueryToHit));
+    const target = augmentedSource.find(i=>i.name.toLowerCase().includes(searchQueryToHit));
     if (target){
       return topTen.slice(0,9).concat([target]);
     }
     return [];
-  },[searchQueryToHit, flattenedSource]);
+  },[searchQueryToHit, augmentedSource]);
   
   useEffect(()=> {
     setResults({
       keyToSort: 'rank',
       currentSortOrder:'ASC',
-      data: queryHits as Array<LeaderboardItemProps>
+      data: queryHits as Array<LeaderboardItemWithExtraProps>
     });
   },[queryHits, dispatch]);
 
   const renderLeaderboardItem = useCallback(({ item, index }: ListRenderItemInfo<Record<string,any>>) => {
-    const isLast = index === flattenedSource.length -1;
     return (
       <LeaderboardRowItem 
           entity={item as LeaderboardItemWithExtraProps} 
-          isLast={isLast} 
+          isLast={index === queryHits.length -1} 
           index={index}
           sortOrders={sortAttributes}
           searchQuery={searchQueryToHit}/>
     );
-  }, [flattenedSource.length, searchQueryToHit, sortAttributes]);
+  }, [queryHits.length, searchQueryToHit, sortAttributes]);
 
   return(
     mode === 'suggestions' ? (
       <LeaderboardAutosuggestions
+          keywordToReturnAllEntities={keywordToReturnAllEntities}
           searchQuery={searchQueryDynamic??''}
-          source={flattenedSource}
+          source={Object.values(augmentedSource).flatMap(subArr=>subArr)}
           onSelect={onSuggestionSelected}
       />
     ): (
@@ -88,8 +104,8 @@ export const Leaderboard:FC<LeaderboardProps> = ({
                   <SortButtonsHeaderRow 
                       sourceToSort={results}
                       setResults={setResults}
-                      sortButtonAttributes={sortAttributes}
-                      forecEntitiesSortedAlphabetically={{keyToSort: 'name', enabled: true}}
+                      sortButtonAttributes={sortAttributes }
+                      forceAlphabeticalOptions={forceAlphabeticalOptions}
                   />
                  )}
               </>
@@ -108,7 +124,6 @@ export const Leaderboard:FC<LeaderboardProps> = ({
         />
         )}
       </>
-    
     )
   );
 };

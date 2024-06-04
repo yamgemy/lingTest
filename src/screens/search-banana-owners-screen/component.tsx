@@ -18,7 +18,7 @@ import { Searchbar, Surface, Text, useTheme } from "react-native-paper";
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from "react-redux";
 import { useDebouncedCallback } from "use-debounce";
-import { labels } from "./constants";
+import { keepNamesAlphabeticallySortedOptions, keywordToReturnAllEntities, labels } from "./constants";
 import { getThemedStyles } from "./styles";
 MaterialCommunityIcon.loadFont();
 
@@ -33,7 +33,7 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
 
   const handleSearchInputTextChange = useCallback((text: string) => {
     dispatch(setLeaderboardSortAttributes(defaultSortOrders));
-    dispatch(setLeaderboardDisplayMode('suggestions'));
+    dispatch(setLeaderboardDisplayMode(text === keywordToReturnAllEntities? 'results': 'suggestions'));
     dispatch(setLeaderboardSearchQuery(text.toLowerCase().trim()));
   }, [dispatch]);
 
@@ -46,21 +46,17 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
     dispatch(setLeaderboardDisplayMode('results'));
     dispatch(setLeaderboardSearchQuery(selection.toLowerCase().trim()));
     setSearchQueryToHit(selection.toLowerCase().trim());
-  },[dispatch]), 300);
-
-  //@ts-ignore
-  const handleKeyPress = useCallback(({ nativeEvent: { key: keyValue } }) => {
-    console.log(keyValue);
-    if(keyValue === 'Enter')
-    {
-      console.log("enter");
-    }
-  },[]);
+  },[dispatch]), 300);;
 
   useEffect(()=>{
     if (!searchQuery) {
       dispatch(setLeaderboardDisplayMode('results'));
       setSearchQueryToHit('');
+    }
+
+    if (searchQuery === keywordToReturnAllEntities) {
+      dispatch(setLeaderboardDisplayMode('results'));
+      setSearchQueryToHit('*');
     }
   },[searchQuery,dispatch]);
 
@@ -90,7 +86,6 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
               value={searchQuery}
               autoCapitalize="none"
               numberOfLines={1}
-              onKeyPress={handleKeyPress}
            />
         </View>
         <View style={styles.searchButtonContainer}>
@@ -115,7 +110,9 @@ export const SearchBananaOwnersScreen:FC<any> = () => {
             source={leaderboardMockData} 
             searchQueryDynamic={searchQuery}
             onSuggestionSelected={onSuggestionPress}
-            searchQueryToHit={searchQueryToHit}/>
+            searchQueryToHit={searchQueryToHit}
+            forceAlphabeticalOptions={keepNamesAlphabeticallySortedOptions}
+            />
       </View>
     </View>
   );

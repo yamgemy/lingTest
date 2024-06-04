@@ -1,5 +1,7 @@
 import { LeaderboardItemWithExtraProps } from "@src/mockdata/types";
-import { SortButtonAttributes } from "../sort-buttons-header-row/types";
+import {
+  SortButtonAttributes
+} from "../sort-buttons-header-row/types";
 
 export const labels = {
   noResults: 'This user name does not exist! Please specify an existing user name!',
@@ -20,7 +22,7 @@ export const defaultSortOrders = [
   {
     id: 'B',
     label: 'Rank',
-    keyToSort: 'rank',
+    keyToSort: 'bananas',
     flex:1,
     sortOrder: 'ASC',
     sortable: true,
@@ -35,5 +37,4 @@ export const defaultSortOrders = [
     sortable: false,
     isCurrentSort: false
   }
-
-] as SortButtonAttributes<LeaderboardItemWithExtraProps>[];
+] as SortButtonAttributes<LeaderboardItemWithExtraProps | Record<string,any>>[];

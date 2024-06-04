@@ -1,6 +1,6 @@
 
-import { SortButtonAttributes } from '@src/components';
 import { defaultSortOrders } from '@src/components/leaderboard/constants';
+import { SortButtonAttributes } from '@src/components/sort-buttons-header-row/types';
 import { handleActions } from 'redux-actions';
 import * as actionTypes from '../actions';
 
@@ -9,7 +9,7 @@ export type LeaderboardModes = 'results' | 'suggestions'
 export interface InitialState {
   searchQuery: string
   mode: LeaderboardModes,
-  sortAttributes: SortButtonAttributes[] //remmembers current sort button states
+  sortAttributes: SortButtonAttributes<Record<string, any>>[]
 }
 
 export const initialState: InitialState = {
