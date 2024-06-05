@@ -14,7 +14,7 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
   },
   listEmptyWrap:{
     flex:1,
-    height:Dimensions.get('screen').height/2,
+    height:Dimensions.get('screen').height/3,
     justifyContent:'center',
     marginHorizontal: 30
   },

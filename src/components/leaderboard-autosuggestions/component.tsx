@@ -1,4 +1,4 @@
-import { LeaderboardItemProps } from '@src/mockdata/types';
+import { LeaderboardItemWithExtraProps } from '@src/mockdata/types';
 import React, { FC, useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
@@ -7,8 +7,9 @@ import { labels } from '../leaderboard/constants';
 import { getThemedStyles } from './styles';
 
 export type LeaderboardAutosuggestionsProps = {
+  keywordToReturnAllEntities: string
   searchQuery: string
-  source: Array<LeaderboardItemProps >
+  source: Array<LeaderboardItemWithExtraProps >
   onSelect: (name:string) => void
 }
 export const LeaderboardAutosuggestions:FC<LeaderboardAutosuggestionsProps> = ({
@@ -25,7 +26,7 @@ export const LeaderboardAutosuggestions:FC<LeaderboardAutosuggestionsProps> = ({
     return source.filter(i=>i.name.toLowerCase().trim().includes(searchQuery));
   }, [source, searchQuery]);
 
-  const renderSuggestionItem = useCallback(({ item, }: ListRenderItemInfo<LeaderboardItemProps>)=> {
+  const renderSuggestionItem = useCallback(({ item }: ListRenderItemInfo<LeaderboardItemWithExtraProps>)=> {
     return (
       <LeaderboardAutosuggestItem 
           entity={item}

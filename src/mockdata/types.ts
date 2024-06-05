@@ -10,5 +10,5 @@ export type LeaderboardItemProps = {
 
 export type LeaderboardItemWithExtraProps = LeaderboardItemProps &{
   rank?: number;
-  nameInPinyin?: string;
+  nameInPinyin: string;
 }
