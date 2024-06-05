@@ -2,7 +2,7 @@ import { LeaderboardItemWithExtraProps } from "@src/mockdata/types";
 import React, { FC, useCallback, useMemo } from "react";
 import { Surface, Text, useTheme } from "react-native-paper";
 import { ScalingTouchable } from "../scaling-touchable";
-import { SortButtonAttributes } from "../sort-buttons-header-row";
+import { SortButtonAttributes } from "../sort-buttons-header-row/types";
 import { UseThemedStyles } from "./styles";
 
 export type LeaderboardRowItemProps = {
@@ -10,7 +10,7 @@ export type LeaderboardRowItemProps = {
   isLast: boolean,
   index: number,
   searchQuery?: Maybe<string>
-  sortOrders: SortButtonAttributes[]
+  sortOrders: SortButtonAttributes<LeaderboardItemWithExtraProps>[]
 }
 
 export const LeaderboardRowItem :FC<LeaderboardRowItemProps> = ({
@@ -53,7 +53,7 @@ export const LeaderboardRowItem :FC<LeaderboardRowItemProps> = ({
           <Text>{entity.rank.toString()}</Text>
         </Surface>
       )}
-        <Surface style={[styles.cell, getCellFlexAllocation('bananas')]}mode={'flat'}>
+        <Surface style={[styles.cell, styles.cellLastRight, getCellFlexAllocation('bananas')]} mode={'flat'}>
           <Text>{entity.bananas}</Text>
         </Surface>
       </Surface>

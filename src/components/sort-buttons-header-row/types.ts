@@ -16,7 +16,6 @@ export type ForceEntitiesSortedAlphabeticallyOptions<EntityType> = {
   keyToKeepAlphabetical: keyof EntityType | string,
   enabled: boolean,
   sortName: keyof EntityType | string,
-  dominantKey: keyof EntityType | string
 }
 
 export type SortButtonsHeaderRowProps<EntityType> = {

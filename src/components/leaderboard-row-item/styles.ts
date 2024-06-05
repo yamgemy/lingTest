@@ -39,6 +39,9 @@ export const UseThemedStyles = (theme: MD3Theme, index: number) => {
       borderTopWidth:1,
       borderTopColor: theme.colors.surface
     },
+    cellLastRight:{
+      borderRightWidth: 0,
+    },
     nameTextHitsQuery:{
       color:colors.red_800,
       fontWeight: '700'
