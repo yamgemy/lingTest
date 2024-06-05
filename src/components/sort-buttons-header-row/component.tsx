@@ -19,61 +19,18 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps<Record<string, an
   const dispatch = useDispatch();
   const isSortRestored = useRef<boolean>(false);
 
-  //any list that falls under this func is when sortOrder is DESC
-  // const keepEntityStringAttributeSortedAphabetically 
-  // = useCallback(( payload: Array<Record<string, any>>, keyToSort: string) => {
-  //   const {keyToKeepAlphabetical, enabled, dominantKey} = forecEntitiesSortedAlphabetically;
-  //   if (!enabled) {return payload.sort((a,b)=> b[keyToSort] - a[keyToSort]);}
-
-  //   const groupedByDominantKey = payload.reduce((acc, item)=> {
-  //     if (!acc[item[dominantKey]]){
-  //       acc[item[dominantKey]] = [];
-  //     }
-  //     acc[item[dominantKey]].push(item);
-  //     acc[item[dominantKey]].sort((a,b)=> 
-  //a[keyToKeepAlphabetical]?.localeCompare(b[keyToKeepAlphabetical]));
-  //     return acc;
-  //   }, {});
-
-  //   console.log('groupedByDominantKey', groupedByDominantKey);
-
-  //   const deepSorted = Object.values(groupedByDominantKey).sort((a,b)=>  
-  //     a[subDominantKey] - b[subDominantKey]
-  //   );
-  //   return [...deepSorted.flatMap(subArr => subArr)] ?? [];
-  // },[forecEntitiesSortedAlphabetically]);
-
   //when rank is Descending, i.e. largest number rank top -> lowest bottom
-  const version2 = useCallback((payload: Record<string, any>[], keyToSort: string) => {
+  const keepAlphabeticalWhenSortDesc = useCallback((payload: Record<string, any>[], keyToSort: string) => {
 
-    const {keyToKeepAlphabetical, enabled, dominantKey, sortName} = forceAlphabeticalOptions;
-
+    const {keyToKeepAlphabetical, enabled, sortName} = forceAlphabeticalOptions;
     const activeSortButton = sortButtonAttributes.find(button=> button.isCurrentSort);
 
     if (enabled && activeSortButton?.keyToSort === sortName){
-      const namesOrderInEachGroup = activeSortButton?.sortOrder; //presumes to be 'rank'
-      const groupedByBananas = payload.reduce((acc, item)=> {
-        if (!acc[dominantKey]){
-          acc[dominantKey] = [];
-        }
-        acc[dominantKey].push(item);
-        //@ts-ignore
-        acc[dominantKey].sort((a,b)=> //namesOrderInEachGroup === 'ASC'?
-          b[keyToKeepAlphabetical]?.localeCompare(a[keyToKeepAlphabetical]) 
-          // :b[keyToKeepAlphabetical]?.localeCompare(a[keyToKeepAlphabetical]) 
-        );
-        return acc;
-      }, {} as Record<string, LeaderboardItemWithExtraProps[]>);
-  
-      const sortedByBananaCountDESC = Object.values(groupedByBananas)
-        .flat(1)
-        .sort((a,b)=> b[dominantKey] - a[dominantKey]) //desc bananas
-        .map((entity, index)=> ({...entity, rank: index+1}))
-        .reverse();
-      console.log('sortedByBananaCountDESC', sortedByBananaCountDESC);
-      return sortedByBananaCountDESC;
+      const result = payload
+        .sort((a,b)=> a[keyToKeepAlphabetical] - b[keyToKeepAlphabetical]) //asc names
+        .sort((a,b)=> b[keyToSort] - a[keyToSort]); //desc rank
+      return result;
     }
-
     return payload.sort((a,b)=> b[keyToSort] - a[keyToSort]);
 
   },[forceAlphabeticalOptions, sortButtonAttributes]);
@@ -102,7 +59,8 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps<Record<string, an
         );
       } else {
         sorted = sortOrder === 'DESC' ?
-          version2(data, keyToSort):
+          //data.sort((a,b)=> b[keyToSort] - a[keyToSort]):
+          keepAlphabeticalWhenSortDesc(data, keyToSort):
           data.sort((a,b)=> a[keyToSort] - b[keyToSort]);
       }
 
@@ -112,7 +70,7 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps<Record<string, an
         data: sorted as LeaderboardItemWithExtraProps[]
       });
       isSortRestored.current = true;
-    },[ sourceToSort, setResults, version2]);
+    },[ sourceToSort, setResults, keepAlphabeticalWhenSortDesc]);
 
   const handleSortPressed = useCallback((item:SortButtonAttributes<LeaderboardItemWithExtraProps>) => () => {
     const {sortOrder, keyToSort} = item;

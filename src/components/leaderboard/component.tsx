@@ -34,21 +34,21 @@ export const Leaderboard:FC<LeaderboardProps> = ({
     const groupKey: keyof LeaderboardItemWithExtraProps = 'bananas';
     const keyToKeepAlphabetical: keyof LeaderboardItemWithExtraProps = 'nameInPinyin';
 
-    const groupedByBananas = rawWithPinyin.reduce((acc, item)=> {
-      if (!acc[groupKey]){
-        acc[groupKey] = [];
-      }
-      acc[groupKey].push(item);
-      acc[groupKey].sort((a,b)=> 
-        //this hardwires a default name order as ASC along DESC bananas
-        a[keyToKeepAlphabetical]?.localeCompare(b[keyToKeepAlphabetical]) 
-      );
-      return acc;
-    }, {} as Record<string, LeaderboardItemWithExtraProps[]>);
+    const groupedByBananas = rawWithPinyin
+      .sort( (a,b)=>a[keyToKeepAlphabetical]?.localeCompare(b[keyToKeepAlphabetical]) )
+      .reduce((acc, item)=> {
+        if (!acc[item[groupKey]]){
+          acc[item[groupKey]] = [];
+        }
+        acc[item[groupKey]].push(item);
+        return acc;
+      }, {} as Record<string, LeaderboardItemWithExtraProps[]>);
 
-    const sortedByBananaCountDESC = Object.values(groupedByBananas).flatMap(subArr=>subArr)
-      .sort((a,b)=> b[groupKey] - a[groupKey]).map((entity, index)=> ({...entity, rank: index+1}));
-    return sortedByBananaCountDESC;
+    const assignedRanks = Object.keys(groupedByBananas)
+      .sort((a,b)=> Number(b) - (Number(a)))
+      .map((key, index)=> groupedByBananas[key].map(entity=> ({...entity, rank: index+ 1}))
+      ).flat(1);
+    return assignedRanks;
   }, [source]);
 
   const queryHits : LeaderboardItemWithExtraProps[]= useMemo(()=> {

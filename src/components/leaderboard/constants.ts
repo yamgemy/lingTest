@@ -5,7 +5,7 @@ import {
 
 export const labels = {
   noResults: 'This user name does not exist! Please specify an existing user name!',
-  beforeQuery: 'Enter user name and hit the Search button to begin',
+  beforeQuery: 'Enter user name and hit the Search button to begin, or enter * to view all.',
   suggestions_title:'Suggestions:'
 };
 
@@ -22,7 +22,7 @@ export const defaultSortOrders = [
   {
     id: 'B',
     label: 'Rank',
-    keyToSort: 'bananas',
+    keyToSort: 'rank',
     flex:1,
     sortOrder: 'ASC',
     sortable: true,
