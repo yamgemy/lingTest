@@ -27,8 +27,11 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps<Record<string, an
 
     if (enabled && activeSortButton?.keyToSort === sortName){
       const result = payload
-        .sort((a,b)=> a[keyToKeepAlphabetical] - b[keyToKeepAlphabetical]) //asc names
-        .sort((a,b)=> b[keyToSort] - a[keyToSort]); //desc rank
+        .sort((a,b)=> {
+          const desc_number = b[keyToSort] - a[keyToSort];
+          const asc_string =  a[keyToKeepAlphabetical].localeCompare(b[keyToKeepAlphabetical]);
+          return desc_number || asc_string;
+        }); //asc names
       return result;
     }
     return payload.sort((a,b)=> b[keyToSort] - a[keyToSort]);

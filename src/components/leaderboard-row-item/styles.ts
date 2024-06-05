@@ -3,13 +3,13 @@ import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { MD3Theme } from "react-native-paper";
 
-export const UseThemedStyles = (theme: MD3Theme, index: number) => {
+export const UseThemedStyles = (theme: MD3Theme, verticalIndex: number) => {
   const rowColor = useMemo(()=>{
     if (theme.dark){
-      return index%2 ===0 ? theme.colors.onSecondary: theme.colors.onPrimary;
+      return verticalIndex%2 ===0 ? theme.colors.onSecondary: theme.colors.onPrimary;
     }
-    return index % 2 === 0 ? theme.colors.onSecondary: colors.light_green ;
-  },[theme, index]);
+    return verticalIndex % 2 === 0 ? theme.colors.onSecondary: colors.light_green ;
+  },[theme, verticalIndex]);
 
   const queryHitRowColor = useMemo(()=> {
     return theme.dark ? theme.colors.onTertiary: colors.red_500_lighter;

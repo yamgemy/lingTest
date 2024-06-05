@@ -7,8 +7,6 @@ export const labels = {
 export const keepNamesAlphabeticallySortedOptions = {
   keyToKeepAlphabetical: 'nameInPinyin',
   sortName: 'rank',
-  // dominantKey not 'rank' because 'rank' is unique in our case; 'banans' group up entities with diff names
-  dominantKey: 'bananas',
   enabled: true, 
 } as ForceEntitiesSortedAlphabeticallyOptions<Record<string,any>>;
 

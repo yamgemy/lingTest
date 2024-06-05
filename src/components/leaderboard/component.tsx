@@ -35,7 +35,7 @@ export const Leaderboard:FC<LeaderboardProps> = ({
     const keyToKeepAlphabetical: keyof LeaderboardItemWithExtraProps = 'nameInPinyin';
 
     const groupedByBananas = rawWithPinyin
-      .sort( (a,b)=>a[keyToKeepAlphabetical]?.localeCompare(b[keyToKeepAlphabetical]) )
+      .sort((a,b)=>a[keyToKeepAlphabetical]?.localeCompare(b[keyToKeepAlphabetical]))
       .reduce((acc, item)=> {
         if (!acc[item[groupKey]]){
           acc[item[groupKey]] = [];
@@ -44,10 +44,13 @@ export const Leaderboard:FC<LeaderboardProps> = ({
         return acc;
       }, {} as Record<string, LeaderboardItemWithExtraProps[]>);
 
+    /*
+      assigning same rank to entities with same banana count
+      */
     const assignedRanks = Object.keys(groupedByBananas)
-      .sort((a,b)=> Number(b) - (Number(a)))
-      .map((key, index)=> groupedByBananas[key].map(entity=> ({...entity, rank: index+ 1}))
-      ).flat(1);
+      .sort((a,b)=> Number(b) - (Number(a))) //most bananas first
+      .map((key, index)=> groupedByBananas[key].map(entity=> ({...entity, rank: index+ 1})))
+      .flat(1);
     return assignedRanks;
   }, [source]);
 
@@ -77,8 +80,8 @@ export const Leaderboard:FC<LeaderboardProps> = ({
     return (
       <LeaderboardRowItem 
           entity={item as LeaderboardItemWithExtraProps} 
-          isLast={index === queryHits.length -1} 
-          index={index}
+          isVerticalLast={index === queryHits.length -1} 
+          verticalIndex={index}
           sortOrders={sortAttributes}
           searchQuery={searchQueryToHit}/>
     );
