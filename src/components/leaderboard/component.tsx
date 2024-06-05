@@ -98,6 +98,7 @@ export const Leaderboard:FC<LeaderboardProps> = ({
         <FlatList 
             data={results.data} 
             renderItem={renderLeaderboardItem}
+            stickyHeaderIndices={[0]}
             ListHeaderComponent={
               <>
                 {results && results.data.length > 0 && (

@@ -13,7 +13,7 @@ export type LeaderboardRowItemProps = {
   sortOrders: SortButtonAttributes<LeaderboardItemWithExtraProps>[]
 }
 
-export const LeaderboardRowItem :FC<LeaderboardRowItemProps> = ({
+const Component :FC<LeaderboardRowItemProps> = ({
   entity, 
   isLast, 
   index,
@@ -61,3 +61,5 @@ export const LeaderboardRowItem :FC<LeaderboardRowItemProps> = ({
     </ScalingTouchable>
   );
 };
+
+export const LeaderboardRowItem = React.memo(Component);
