@@ -110,11 +110,11 @@ export const SortButtonsHeaderRow:FC<SortButtonsHeaderRowProps<Record<string, an
           <Text>
             {i.label}
           </Text>
-          <View style={{width:30}}>
+          <View style={styles.iconButtonWrap}>
             {i.sortable && (
             <IconButton 
                 icon={i.sortOrder === 'ASC' ? 'menu-up': 'menu-down'}
-                size={20}
+                size={25}
                 iconColor={i.isCurrentSort? colors.red_600 : colors.plainBlack}
                 onPress={handleSortPressed(i)}
             />

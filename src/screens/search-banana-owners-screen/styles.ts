@@ -18,7 +18,8 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
     backgroundColor:theme.colors.background
   },
   searchInputContainer:{
-    flex:4
+    flex:4,
+    marginRight:8,
   },
   searchButtonContainer:{
     flex:1,
@@ -28,7 +29,7 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
     height: 50,
     justifyContent:'center',
     alignItems:'center',
-    borderRadius: 20,
+    borderRadius: 15,
     backgroundColor: theme.dark ? theme.colors.onTertiary : theme.colors.primary
   },
   searchButtonDisabled:{
@@ -44,11 +45,12 @@ export const getThemedStyles = (theme: MD3Theme)=> StyleSheet.create({
   },
   searchComponent:{
     height: 50,
+    borderRadius: 15,
   },
   searchInput:{
     height: 50,
     marginVertical: 0,
-    paddingVertical:0,
-    minHeight: 0
+    paddingVertical: 0,
+    minHeight: 0,
   }
 });

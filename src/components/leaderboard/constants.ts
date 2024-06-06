@@ -14,7 +14,7 @@ export const defaultSortOrders = [
     id: 'A',
     label: 'Name',
     keyToSort: 'nameInPinyin', //not name because some names are in chinese
-    flex: 2.5,
+    flex: 2.2,
     sortOrder: 'ASC',
     sortable: true,
     isCurrentSort: false
